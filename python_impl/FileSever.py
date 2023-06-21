@@ -67,7 +67,7 @@ class RSA_clone(object):
         encoded_file = open("./reciever.pem", 'rb').read()
         recipient_key = RSA.import_key(encoded_file, passphrase)
         session_key = get_random_bytes(16)
-        print('type of session key is ' + str(type(session_key)))
+
         
         cipher_rsa = PKCS1_OAEP.new(recipient_key)
         enc_session_key = cipher_rsa.encrypt(session_key)
