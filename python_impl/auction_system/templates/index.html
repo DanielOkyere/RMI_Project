@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction System</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Auction System</h1>
+        
+        <form id="createAuctionForm" class="mb-4">
+            <h4>Create Auction</h4>
+            <div class="form-group">
+                <label for="item_name">Item Name</label>
+                <input type="text" class="form-control" id="item_name" name="item_name" required>
+            </div>
+            <div class="form-group">
+                <label for="initial_price">Initial Price</label>
+                <input type="number" class="form-control" id="initial_price" name="initial_price" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+
+        <div id="auctionInfoContainer">
+            <h4>Auction Information</h4>
+            <div id="auctionInfo"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Submit create auction form
+        document.getElementById("createAuctionForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            var item_name = document.getElementById("item_name").value;
+            var initial_price = document.getElementById("initial_price").value;
+            const newAuction = { item_name: item_name, initial_price: parseFloat(initial_price) }
+            // Send fetch request to create auction
+            fetch("http://localhost:8000/auction", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newAuction)
+            })
+            .then(response => response.json())
+            .then(data => {
+                var auction_id = data.auction_id;
+                alert("Auction created successfully! Auction ID: " + auction_id);
+            })
+            .catch(error => {
+                alert("Error creating auction: " + error);
+            });
+        });
+
+        // Get auction information
+        function getAuctionInfo() {
+            fetch("http://localhost:8000/auctions")
+                .then(response => response.json())
+                .then(data => {
+                    var auction = data.auction;
+                    var auctionInfoHTML = "<p><strong>Auction ID:</strong> " + auction.id + "</p>" +
+                                          "<p><strong>Item Name:</strong> " + auction.item_name + "</p>" +
+                                          "<p><strong>Current Price:</strong> " + auction.current_price + "</p>" +
+                                          "<p><strong>Bidder Name:</strong> " + (auction.bidder_name || "None") + "</p>";
+
+                    document.getElementById("auctionInfo").innerHTML = auctionInfoHTML;
+                })
+                .catch(error => {
+                    alert("Error retrieving auction information: " + error);
+                });
+        }
+
+
+        getAuctionInfo();
+    </script>
+</body>
+</html>
