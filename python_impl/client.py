@@ -13,10 +13,11 @@ fileServer = Pyro4.Proxy("PYRONAME:FileServer")
 filename = "example.txt"
 file_data = fileServer.getFile(filename)
 
-with open(filename, 'a+') as file:
-    content = file.read()
-    print(content)
-    file.write("\n Client has added some new text \n")
+with open(filename, 'r') as file:
+    print("Here is the content of the file currently: " + file.read())
+   
+with open(filename, 'a+') as file2:
+    file2.write("\n Client has added some new text \n")
 
 print("File recieved and saved: ", filename)
 
