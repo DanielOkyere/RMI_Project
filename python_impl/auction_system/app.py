@@ -2,12 +2,12 @@
 """FastAPI Server"""
 
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import Pyro4
-from server import engine
+from server import engine, Session
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -25,6 +25,15 @@ app.add_middleware(
 )
 # Initialize the Pyro4 server and register it with a name server
 server = Pyro4.Proxy("PYRONAME:AuctionServer")
+
+# Dependency
+def get_db():
+    db = Session()
+    try:
+        yield db
+    finally:
+        db.close()
+        
 
 @app.on_event('shutdown')
 def shutdown():
@@ -46,8 +55,8 @@ def create_auction(item_name: str, initial_price: float):
     return {"auction_id": auction_id}
 
 @app.post("/bid/{auction_id}")
-def place_bid(auction_id: int, bidder_name: str, bid_amount: float):
-    success = server.place_bid(auction_id, bidder_name, bid_amount)
+def place_bid(auction_id: int, bidder_id: int, bid_amount: float):
+    success = server.place_bid(auction_id, bidder_id, bid_amount)
     return {"success": success}
 
 @app.get("/auction/{auction_id}")
@@ -56,6 +65,6 @@ def get_auction_info(auction_id: int):
     return {"auction": auction}
 
 @app.get("/auctions")
-def get_auctions():
-    auctions = server.fetch_auctions()
+def get_auctions( skip: int, limit: int, db: Session = Depends(get_db), ):
+    auctions =  server.fetch_auctions(skip, limit)
     return {"auctions": auctions}

@@ -9,8 +9,8 @@ from sqlalchemy.orm import sessionmaker, relationship
 
 # SQLAlchemy setup
 engine = create_engine("sqlite:///auction.db", connect_args={"check_same_thread": False}, echo=True)
-Base = declarative_base()
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
 
 # Database models
 class User(Base):
@@ -71,13 +71,12 @@ class AuctionServer(object):
             Method for placing a bid on auction
             Args:
                 auction_id (int): auction Id
-                bidder_name (str): bidder name
+                bidder_id (int): bidder id
                 bid_amount (int): bid amount
             Returns:
                 Boolean true if bid is placed, false if bid is not placed"""
         session = Session()
         auction = session.query(Auction).get(auction_id)
-        
         if auction:
             if bid_amount > auction.current_price:
                 bidder = session.query(User).get(bidder_id)
@@ -117,16 +116,8 @@ class AuctionServer(object):
             session.close()
             raise ValueError("Invalid auction ID")
 
-    def fetch_auctions(self):
-        session = Session()
-        auctions = session.query(Auction).all()
-        print(auctions)
-        if auctions:
-            session.close()
-            return auctions
-        else:
-            session.close()
-            return 
+    def fetch_auctions(self, db,skip = 0, limit = 10):
+        return db.query(Auction).offset(skip).limit(limit).all()
 
 def main():
     Pyro4.Daemon.serveSimple({

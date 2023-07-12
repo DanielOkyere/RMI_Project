@@ -59,8 +59,8 @@
         });
 
         // Get auction information
-        function getAuctionInfo() {
-            fetch("http://localhost:8000/auctions")
+        function getAuctionInfo(auction_id) {
+            fetch("http://localhost:8000/auction/" + `${auction_id}`)
                 .then(response => response.json())
                 .then(data => {
                     var auction = data.auction;
@@ -77,7 +77,7 @@
         }
 
 
-        getAuctionInfo();
+        getAuctionInfo(1);
     </script>
 </body>
 </html>
