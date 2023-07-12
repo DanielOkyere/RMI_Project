@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import Pyro4
-from server import engine, Session
+from server import engine, Session, Auction
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -66,5 +66,5 @@ def get_auction_info(auction_id: int):
 
 @app.get("/auctions")
 def get_auctions( skip: int, limit: int, db: Session = Depends(get_db), ):
-    auctions =  server.fetch_auctions(skip, limit)
+    auctions =  db.query(Auction).offset(skip).limit(limit).all()
     return {"auctions": auctions}

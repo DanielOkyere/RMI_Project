@@ -1,83 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auction System</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-4">
-        <h1>Auction System</h1>
-        
-        <form id="createAuctionForm" class="mb-4">
-            <h4>Create Auction</h4>
-            <div class="form-group">
-                <label for="item_name">Item Name</label>
-                <input type="text" class="form-control" id="item_name" name="item_name" required>
-            </div>
-            <div class="form-group">
-                <label for="initial_price">Initial Price</label>
-                <input type="number" class="form-control" id="initial_price" name="initial_price" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Create</button>
-        </form>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Auction System</title>
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <div class="container mt-4">
+            <h1 class="h1">Auction System</h1>
 
-        <div id="auctionInfoContainer">
-            <h4>Auction Information</h4>
-            <div id="auctionInfo"></div>
+            <form id="createAuctionForm" class="mb-4">
+                <h4 class="h4">Create Auction</h4>
+                <div class="form-group">
+                    <label for="item_name">Item Name</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="item_name"
+                        name="item_name"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="initial_price">Initial Price</label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        id="initial_price"
+                        name="initial_price"
+                        required
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+
+            <div id="auctionInfoContainer">
+                <h4 class="h4">Auction Information</h4>
+                <div id="auctionInfo" class="list-group"></div>
+            </div>
         </div>
-    </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script>
-        // Submit create auction form
-        document.getElementById("createAuctionForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            var item_name = document.getElementById("item_name").value;
-            var initial_price = document.getElementById("initial_price").value;
-            const newAuction = { item_name: item_name, initial_price: parseFloat(initial_price) }
-            // Send fetch request to create auction
-            fetch("http://localhost:8000/auction", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(newAuction)
-            })
-            .then(response => response.json())
-            .then(data => {
-                var auction_id = data.auction_id;
-                alert("Auction created successfully! Auction ID: " + auction_id);
-            })
-            .catch(error => {
-                alert("Error creating auction: " + error);
-            });
-        });
-
-        // Get auction information
-        function getAuctionInfo(auction_id) {
-            fetch("http://localhost:8000/auction/" + `${auction_id}`)
-                .then(response => response.json())
-                .then(data => {
-                    var auction = data.auction;
-                    var auctionInfoHTML = "<p><strong>Auction ID:</strong> " + auction.id + "</p>" +
-                                          "<p><strong>Item Name:</strong> " + auction.item_name + "</p>" +
-                                          "<p><strong>Current Price:</strong> " + auction.current_price + "</p>" +
-                                          "<p><strong>Bidder Name:</strong> " + (auction.bidder_name || "None") + "</p>";
-
-                    document.getElementById("auctionInfo").innerHTML = auctionInfoHTML;
-                })
-                .catch(error => {
-                    alert("Error retrieving auction information: " + error);
+        <script>
+            // Submit create auction form
+            document
+                .getElementById("createAuctionForm")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    var item_name = document.getElementById("item_name").value;
+                    var initial_price =
+                        document.getElementById("initial_price").value;
+                    const newAuction = {
+                        item_name: item_name,
+                        initial_price: parseFloat(initial_price),
+                    };
+                    // Send fetch request to create auction
+                    fetch(`http://localhost:8000/auction?item_name=${item_name}&initial_price=${initial_price}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        }
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            var auction_id = data.auction_id;
+                            alert(
+                                "Auction created successfully! Auction ID: " +
+                                    auction_id,
+                            );
+                        })
+                        .catch((error) => {
+                            alert("Error creating auction: " + error);
+                        });
                 });
-        }
 
+            // Get auction information
+            function getAuctionInfo() {
+                const auctionlist = document.getElementById("auctionInfo");
+                fetch("http://localhost:8000/auctions?skip=0&limit=10", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        var { auctions } = data;
+                        auctions.forEach((auction) => {
+                            const li = document.createElement("li");
+                            li.innerHTML = `
+                            <div class='list-group-item row align-items-center'>
+                                <div class="col">
+                                    <h3> Item Name: ${auction.item_name} </h3>
+                                    <p><strong>Auction ID:</strong>  ${auction.id}</p>
+                                </div>
+                                <div class="col">Current bid: ${auction.current_price}</div>
+                                <div class="btn btn-primary mt-4">Place bid</>
+                            </div>
+                            `;
+                            auctionlist.appendChild(li);
+                        });
+                    })
+                    .catch((error) => {
+                        alert("Error retrieving auction information: " + error);
+                    });
+            }
 
-        getAuctionInfo(1);
-    </script>
-</body>
+            getAuctionInfo(1);
+        </script>
+    </body>
 </html>

@@ -116,8 +116,6 @@ class AuctionServer(object):
             session.close()
             raise ValueError("Invalid auction ID")
 
-    def fetch_auctions(self, db,skip = 0, limit = 10):
-        return db.query(Auction).offset(skip).limit(limit).all()
 
 def main():
     Pyro4.Daemon.serveSimple({
