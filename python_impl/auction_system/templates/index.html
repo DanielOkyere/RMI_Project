@@ -7,7 +7,11 @@
         <!-- Bootstrap CSS -->
         <link
             rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+            crossorigin="anonymous"
         />
     </head>
     <body>
@@ -26,7 +30,7 @@
                         required
                     />
                 </div>
-                <div class="form-group">
+                <div class="form-group mt-2">
                     <label for="initial_price">Initial Price</label>
                     <input
                         type="number"
@@ -36,7 +40,9 @@
                         required
                     />
                 </div>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary mt-2">
+                    Create
+                </button>
             </form>
 
             <div id="auctionInfoContainer">
@@ -44,10 +50,69 @@
                 <div id="auctionInfo" class="list-group"></div>
             </div>
         </div>
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            Place A bid on Item
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="bid_form">
+                            <label for="initial_price">Auction Id</label>
+                            <input
+                                type="number"
+                                class="form-control mt-2"
+                                id="bid_id"
+                                name="Item Id"
+                                required
+                            />
+                            <label for="initial_price">New Bid</label>
+                            <input
+                                type="number"
+                                class="form-control mt-2"
+                                id="new_bid"
+                                name="New bid"
+                                required
+                            />
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            Place Bid
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Bootstrap JS -->
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"
+        ></script>
         <script>
             // Submit create auction form
             document
@@ -62,12 +127,15 @@
                         initial_price: parseFloat(initial_price),
                     };
                     // Send fetch request to create auction
-                    fetch(`http://localhost:8000/auction?item_name=${item_name}&initial_price=${initial_price}`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        }
-                    })
+                    fetch(
+                        `http://localhost:8000/auction?item_name=${item_name}&initial_price=${initial_price}`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        },
+                    )
                         .then((response) => response.json())
                         .then((data) => {
                             console.log(data);
@@ -97,13 +165,17 @@
                         auctions.forEach((auction) => {
                             const li = document.createElement("li");
                             li.innerHTML = `
-                            <div class='list-group-item row align-items-center'>
-                                <div class="col">
+                            <div class='list-group-item'>
+                                <div class="">
                                     <h3> Item Name: ${auction.item_name} </h3>
                                     <p><strong>Auction ID:</strong>  ${auction.id}</p>
                                 </div>
-                                <div class="col">Current bid: ${auction.current_price}</div>
-                                <div class="btn btn-primary mt-4">Place bid</>
+                                <div class="row align-items-center">
+                                    <p class="col-6">Current bid: ${auction.current_price} </p>
+                                    <button type="button" class="btn btn-primary m-2 w-25 col-6" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                       Place bid
+                                    </button>
+                                </div>
                             </div>
                             `;
                             auctionlist.appendChild(li);
@@ -113,7 +185,6 @@
                         alert("Error retrieving auction information: " + error);
                     });
             }
-
             getAuctionInfo(1);
         </script>
     </body>
