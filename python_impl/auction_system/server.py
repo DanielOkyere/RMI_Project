@@ -3,14 +3,17 @@
 """Server setup for Auction System"""
     
 import Pyro4
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
+import datetime
 
 # SQLAlchemy setup
 engine = create_engine("sqlite:///auction.db", connect_args={"check_same_thread": False}, echo=True)
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+now = datetime.datetime.now()
 
 # Database models
 class User(Base):
@@ -27,7 +30,7 @@ class Auction(Base):
     current_price = Column(Float, nullable=False)
     bidder_id = Column(Integer, ForeignKey("users.id"))
     bidder = relationship("User", back_populates="auctions")
-
+    expiry = Column(Integer, nullable=False)
 
 Base.metadata.create_all(bind=engine)
 
@@ -49,17 +52,18 @@ class AuctionServer(object):
         session.close()
         return user.id
 
-    def create_auction(self, item_name, initial_price):
+    def create_auction(self, item_name, initial_price, expiry):
         """create_auction:
             Method for creating an auction
             Args:
                 item_name (str) : name of Item
                 initial_price (int) : initial price of auction item
+                auction_duration (int): auction duration
             Returns:
                 auction_id: id of the auctioned Item
         """
         session = Session()
-        auction = Auction(item_name=item_name, current_price=initial_price)
+        auction = Auction(item_name=item_name, current_price=initial_price, expiry=expiry)
         session.add(auction)
         session.commit()
         session.refresh(auction)
@@ -108,7 +112,8 @@ class AuctionServer(object):
                 "id": auction.id,
                 "item_name": auction.item_name,
                 "current_price": auction.current_price,
-                "bidder_name": auction.bidder.name if auction.bidder else None
+                "bidder_name": auction.bidder.name if auction.bidder else None,
+                "expiry": auction.expiry
                 }
             session.close()
             return auction_info

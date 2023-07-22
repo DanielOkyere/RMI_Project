@@ -1,0 +1,345 @@
+body {
+    margin: 20px;
+    margin-top: 50px !important;
+    background-color: #fff;
+}
+
+a {
+    color: #c00;
+}
+
+.page-content-wrapper .page-content {
+    margin-left: 0;
+    padding: 0;
+}
+
+.page-content-wrapper .page-content {
+    padding: 0 !important;
+}
+
+.newest-auction {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.newest-auction > li {
+    margin: 0 0 20px;
+}
+
+.newest-auction > li > img {
+    float: left;
+    width: 200px;
+    height: 130px;
+}
+
+.newest-auction > li > .info {
+    overflow: hidden;
+    background-color: #f5f5f5;
+    position: relative;
+    height: 130px;
+    padding-top: 7px;
+    padding-right: 40px;
+    text-align: left;
+}
+
+.newest-auction > li > .info > .title {
+    font-size: 17pt;
+    margin: 0;
+    color: #c00;
+}
+
+.newest-auction > li > .info > .desc {
+    font-size: 12pt;
+    font-weight: 300;
+    margin: 0;
+}
+
+.newest-auction > li > .info a {
+    margin: 0 10px;
+}
+
+.newest-auction > li > .info > .price {
+    font-size: 17pt;
+    margin: 0;
+    color: #c00;
+}
+
+.newest-auction > li > .info > .year {
+    margin: 0;
+}
+
+.newest-auction > li > .info > .milage {
+    margin: 0;
+}
+
+.newest-auction > li > .info > ul {
+    display: table;
+    width: 100%;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+.newest-auction > li > .info > ul > li {
+    display: table-cell;
+    font-size: 11pt;
+    font-weight: 300;
+    padding: 3px 0 3px 10px;
+    text-align: left;
+    color: #1e1e1e;
+    border-right: 1px solid #fff;
+}
+
+.newest-auction > li > .info > ul > li > small {
+    margin-left: 4px;
+    color: #c00;
+}
+
+.newest-auction > li > .info > .title,
+.newest-auction > li > .info > .desc {
+    padding: 0 10px;
+}
+
+.newest-auction > li > .info > .price {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+}
+
+.newest-auction > li > .info > .year {
+    font-size: 11pt;
+    position: absolute;
+    top: 34px;
+    right: 10px;
+}
+
+.newest-auction > li > .info > .milage {
+    position: absolute;
+    top: 55px;
+    right: 10px;
+}
+
+.newest-auction > li > .info > ul {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid #fff;
+    background-color: #d9d9d9;
+}
+
+@media only screen and (max-width: 768px) {
+    .newest-auction > li > img {
+        width: 100%;
+        height: 100%;
+    }
+    .newest-auction > li > .info > .title {
+        font-size: 14pt;
+        margin: 0;
+        color: #c00;
+    }
+    .newest-auction > li > .info > .desc {
+        font-size: 12pt;
+        font-weight: 300;
+        margin: 0;
+    }
+    .newest-auction > li > .info a {
+        font-size: 12pt;
+        margin: 0 10px;
+    }
+    .newest-auction > li > .info > .price {
+        font-size: 14pt;
+        margin: 0;
+        color: #c00;
+    }
+    .newest-auction > li > .info > .year {
+        position: absolute;
+        top: 27px;
+        font-size: 12pt;
+    }
+    .newest-auction > li > .info > .milage {
+        position: absolute;
+        top: 50px;
+        font-size: 12pt;
+    }
+    .newest-auction > li > .info > ul > li {
+        display: table-cell;
+        font-size: 11pt;
+        font-weight: 300;
+        padding: 3px 0 3px 10px;
+        text-align: left;
+        color: #1e1e1e;
+        border-right: 1px solid #fff;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .newest-auction > li > img {
+        width: 100%;
+        height: 100%;
+    }
+    .newest-auction > li > .info > .title {
+        font-size: 12pt;
+        margin: 0;
+        color: #c00;
+    }
+    .newest-auction > li > .info > .desc {
+        font-size: 10pt;
+        font-weight: 300;
+        margin: 0;
+    }
+    .newest-auction > li > .info a {
+        font-size: 10pt;
+        margin: 0 10px;
+    }
+    .newest-auction > li > .info > .price {
+        font-size: 12pt;
+        margin: 0;
+        color: #c00;
+    }
+    .newest-auction > li > .info > .year {
+        position: absolute;
+        top: 25px;
+        font-size: 10pt;
+        margin: 0;
+    }
+    .newest-auction > li > .info > .milage {
+        position: absolute;
+        top: 45px;
+        font-size: 10pt;
+        margin: 0;
+    }
+    .newest-auction > li > .info > ul > li {
+        display: table-cell;
+        font-size: 10pt;
+        font-weight: 300;
+        padding: 3px 0 3px 10px;
+        text-align: left;
+        color: #1e1e1e;
+        border-right: 1px solid #fff;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .newest-auction > li > img {
+        width: 100%;
+        height: 100%;
+    }
+    .newest-auction > li > .info > .title {
+        font-size: 17pt;
+        margin: 0;
+        color: #c00;
+    }
+    .newest-auction > li > .info > .desc {
+        font-size: 12pt;
+        font-weight: 300;
+        margin: 0;
+    }
+    .newest-auction > li > .info a {
+        margin: 0 10px;
+    }
+    .newest-auction > li > .info > .price {
+        font-size: 17pt;
+        margin: 0;
+        color: #c00;
+    }
+    .newest-auction > li > .info > .year {
+        margin: 0;
+    }
+    .newest-auction > li > .info > .milage {
+        margin: 0;
+    }
+}
+
+.btn-bid {
+    padding-left: 0 !important;
+    text-align: center !important;
+    vertical-align: middle;
+    color: #fff !important;
+    border-right: none !important;
+    background-color: #c00 !important;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.btn-bid:hover {
+    background-color: #c00 !important;
+}
+
+.horizontal_line {
+    width: 50%;
+    height: 10px;
+    background-color: #c00;
+}
+
+.h-divider {
+    margin: auto;
+    margin-top: 80px;
+    width: 80%;
+    position: relative;
+}
+
+.h-divider .shadow {
+    overflow: hidden;
+    height: 20px;
+}
+
+.h-divider .shadow:after {
+    content: "";
+    display: block;
+    margin: -25px auto 0;
+    width: 100%;
+    height: 25px;
+    border-radius: 125px/12px;
+    box-shadow: 0 0 8px black;
+}
+
+.h-divider .text {
+    width: 100px;
+    height: 45px;
+    padding: 10px;
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: -33px;
+    left: 50%;
+    margin-left: -60px;
+    border-radius: 100%;
+    box-shadow: 0 2px 4px #999;
+    background: white;
+}
+
+.h-divider .text i {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    right: 4px;
+    border-radius: 100%;
+    border: 1px dashed #aaa;
+    text-align: center;
+    line-height: 50px;
+    font-style: normal;
+    color: #999;
+}
+
+.h-divider .text2 {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: -35px;
+    left: 50%;
+    margin-left: -25px;
+    border-radius: 100%;
+    box-shadow: 0 2px 4px #999;
+    background: white;
+}
+
+.h-divider img {
+    position: absolute;
+    margin: 4px;
+    max-width: 60px;
+    border-radius: 100%;
+    border: 1px dashed #aaa;
+}

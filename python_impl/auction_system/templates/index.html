@@ -4,6 +4,10 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Auction System</title>
+        <link
+            href="{{ url_for('static', path='/styles.css') }}"
+            rel="stylesheet"
+        />
         <!-- Bootstrap CSS -->
         <link
             rel="stylesheet"
@@ -16,37 +20,74 @@
     </head>
     <body>
         <div class="container mt-4">
-            <h1 class="h1">Auction System</h1>
-
+            <h1 class="h1 text-center mb-6">Auction System</h1>
             <form id="createAuctionForm" class="mb-4">
                 <h4 class="h4">Create Auction</h4>
-                <div class="form-group">
-                    <label for="item_name">Item Name</label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="item_name"
-                        name="item_name"
-                        required
-                    />
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="item_name">Item Name</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="item_name"
+                            name="item_name"
+                            required
+                        />
+                    </div>
+                    <div class="col">
+                        <label for="initial_price">Initial Price</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="initial_price"
+                            name="initial_price"
+                            required
+                        />
+                    </div>
                 </div>
-                <div class="form-group mt-2">
-                    <label for="initial_price">Initial Price</label>
-                    <input
-                        type="number"
-                        class="form-control"
-                        id="initial_price"
-                        name="initial_price"
-                        required
-                    />
+                <div class="form-group mt-2 row">
+                    <div class="col">
+                        <label for="auction_duration"
+                            >Auction Duration (in minutes)</label
+                        >
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="auction_duration"
+                            ,
+                            name="auction_duration"
+                            required
+                        />
+                    </div>
+                    <div class="col">
+                        <label for="start_date">Start Date</label>
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="start_date"
+                            ,
+                            name="start_date"
+                        />
+                    </div>
                 </div>
+                <div class="form-group mt-2"></div>
                 <button type="submit" class="btn btn-primary mt-2">
                     Create
                 </button>
             </form>
 
+ 
+
             <div id="auctionInfoContainer">
-                <h4 class="h4">Auction Information</h4>
+                <h4 class="h4 text-center mt-6">Active Auctions</h4>
+                <div class="h-divider mb-6">
+                    <div class="shadow"></div>
+                    <div class="text2">
+                        <img
+                            src="https://t1.gstatic.com/images?q=tbn:ANd9GcQsmMfybMIwoE5etmOIAuvnFWdfv_8C1Bq15urJFqwhhI55FyYNP2YuUA"
+                        />
+                    </div>
+                </div>
                 <div id="auctionInfo" class="list-group"></div>
             </div>
         </div>
@@ -73,22 +114,33 @@
                     </div>
                     <div class="modal-body">
                         <form id="bid_form">
-                            <label for="initial_price">Auction Id</label>
+                            <label for="newAuction_id">Auction Id</label>
                             <input
                                 type="number"
                                 class="form-control mt-2"
-                                id="bid_id"
+                                id="newbid_id"
                                 name="Item Id"
                                 required
                             />
-                            <label for="initial_price">New Bid</label>
+                            <label for="newBid_price">New Bid</label>
                             <input
                                 type="number"
                                 class="form-control mt-2"
-                                id="new_bid"
-                                name="New bid"
+                                id="newBid_price"
+                                name="New bid Price"
                                 required
                             />
+                            <label for="user_id">User Id</label>
+                            <input
+                                type="number"
+                                class="form-control mt-2"
+                                id="newBid_user"
+                                name="New bid User Id"
+                                required
+                            />
+                            <button type="submit" class="btn btn-primary mt-4">
+                                Place Bid
+                            </button>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -98,9 +150,6 @@
                             data-bs-dismiss="modal"
                         >
                             Close
-                        </button>
-                        <button type="button" class="btn btn-primary">
-                            Place Bid
                         </button>
                     </div>
                 </div>
@@ -114,6 +163,53 @@
             crossorigin="anonymous"
         ></script>
         <script>
+            // Timer Function
+            function updateTimer(endTime, timerOutput) {
+                const now = new Date().getTime();
+                const timeRemaining = endTime - now;
+
+                const minutes = Math.floor(
+                    (timeRemaining % (1000 * 60 * 60)) / (1000 * 6),
+                );
+                const seconds = Math.floor(
+                    (timeRemaining % (1000 * 60)) / 1000,
+                );
+
+                document.getElementById(`${timerOutput}`).innerText =
+                    minutes + "m" + seconds + "s";
+
+                if (timeRemaining <= 0) {
+                    document.getElementById(`${timerOutput}`).innerText =
+                        "Auction Ended";
+                }
+            }
+
+            // Submit bid form
+            document
+                .getElementById("bid_form")
+                .addEventListener("submit", function (e) {
+                    const newBid_id =
+                        document.getElementById("newbid_id").value;
+                    const newBidPrice =
+                        document.getElementById("newBid_price").value;
+                    const newBidUser =
+                        document.getElementById("newBid_user").value;
+
+                    fetch(
+                        `http://localhost:8000/bid/${newBid_id}?bidder_id=${newBidUser}&bid_amount=${newBidPrice}`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        },
+                    )
+                        .then((response) => response.json())
+                        .then((data) => console.log(data))
+                        .catch((error) => {
+                            alert("Error bidding for auction: " + error);
+                        });
+                });
             // Submit create auction form
             document
                 .getElementById("createAuctionForm")
@@ -122,13 +218,11 @@
                     var item_name = document.getElementById("item_name").value;
                     var initial_price =
                         document.getElementById("initial_price").value;
-                    const newAuction = {
-                        item_name: item_name,
-                        initial_price: parseFloat(initial_price),
-                    };
+                    var auction_duration =
+                        document.getElementById("auction_duration").value;
                     // Send fetch request to create auction
                     fetch(
-                        `http://localhost:8000/auction?item_name=${item_name}&initial_price=${initial_price}`,
+                        `http://localhost:8000/auction?item_name=${item_name}&initial_price=${initial_price}&expiry=${auction_duration}`,
                         {
                             method: "POST",
                             headers: {
@@ -138,7 +232,6 @@
                     )
                         .then((response) => response.json())
                         .then((data) => {
-                            console.log(data);
                             var auction_id = data.auction_id;
                             alert(
                                 "Auction created successfully! Auction ID: " +
@@ -164,21 +257,36 @@
                         var { auctions } = data;
                         auctions.forEach((auction) => {
                             const li = document.createElement("li");
+                            var endTime =
+                                new Date().getTime() + auction.expiry * 60;
                             li.innerHTML = `
-                            <div class='list-group-item'>
-                                <div class="">
-                                    <h3> Item Name: ${auction.item_name} </h3>
-                                    <p><strong>Auction ID:</strong>  ${auction.id}</p>
-                                </div>
-                                <div class="row align-items-center">
-                                    <p class="col-6">Current bid: ${auction.current_price} </p>
-                                    <button type="button" class="btn btn-primary m-2 w-25 col-6" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                       Place bid
-                                    </button>
+                            <div class="row">
+                                <div class="col-md-12">
+                                     <ul class="newest-auction">
+                                          <li>
+                                               <img src="https://picsum.photos/200" alt="">
+                                               <div class="info">
+                                                    <h2 class="title">${auction.item_name}</h2>
+                                                    <p class="desc">Minimum bid increament is GHS 100 for this Auction.</p>
+                                                    <h2 class="price">GHS ${auction.current_price}</h2>
+                                                    <ul>
+                                                        
+                                                         <li><div class="" id="${auction.item_name}"></div><br>End Time</li>
+                                                         <li>${auction.id}<br>Auction ID.</li>
+                                                         <li class="btn-bid" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                           BID NOW!
+                                                         </li>
+                                                    </ul>
+                                               </div>
+                                          </li>
+                                     </ul>
                                 </div>
                             </div>
                             `;
                             auctionlist.appendChild(li);
+                            var timeInterval = setInterval(function () {
+                                updateTimer(endTime, auction.item_name);
+                            }, 1000);
                         });
                     })
                     .catch((error) => {

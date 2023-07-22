@@ -6,11 +6,15 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
 import Pyro4
 from server import engine, Session, Auction
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 origins = [
     'http://localhost:8000'
@@ -50,8 +54,8 @@ def create_user(username: str):
     return user
 
 @app.post("/auction")
-def create_auction(item_name: str, initial_price: float):
-    auction_id = server.create_auction(item_name, initial_price)
+def create_auction(item_name: str, initial_price: float, expiry: int):
+    auction_id = server.create_auction(item_name, initial_price, expiry)
     return {"auction_id": auction_id}
 
 @app.post("/bid/{auction_id}")
